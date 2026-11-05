@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Knight: Silksong</title>
+    <meta name="description" content="Explore Hollow Knight: Silksong através de notícias,informações de jogabilidade,Hornet,chefes,inimigos,locais,trailers,capturas de tela e muito mais.Site não oficial feito por fã.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        hk: {
+                            black: '#08090D',
+                            darkblue: '#10131C',
+                            purple: '#30243D',
+                            burgundy: '#681F32',
+                            gold: '#B89A62',
+                            white: '#E8E8E8',
+                            gray: '#8D929D'
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['"Cinzel Decorative"', 'serif'],
+                        body: ['"Inter"', 'sans-serif'],
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to bottom, rgba(8, 9, 13, 0.3) 0%, rgba(8, 9, 13, 1) 100%), url('https://images.unsplash.com/photo-1518928876116-566b6cda8470?auto=format&fit=crop&w=2000&q=80')",
+                        'hornet-bg': "linear-gradient(to right, rgba(8, 9, 13, 1) 0%, rgba(104, 31, 50, 0.2) 50%, rgba(8, 9, 13, 1) 100%)",
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #08090D;
+            color: #E8E8E8;
+            overflow-x: hidden;
+        }
+
+        /* Barra de rolagem personalizada */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #08090D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #30243D;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #681F32;
+        }
+
+        /* Navegação Transparente e Vidro */
+        .nav-glass {
+            background: rgba(8, 9, 13, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(184, 154, 98, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .nav-transparent {
+            background: transparent;
+            border-bottom: 1px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        /* Animações */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Efeitos de Hover */
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(104, 31, 50, 0.2);
+            border-color: #681F32;
+        }
+        
+        .gold-glow:hover {
+            box-shadow: 0 0 20px rgba(184, 154, 98, 0.3);
+            border-color: #B89A62;
+        }
+
+        .img-zoom {
+            overflow: hidden;
+        }
+        .img-zoom img {
+            transition: transform 0.7s ease;
+        }
+        .img-zoom:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Cartão de Revelação */
+        .reveal-content {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        .reveal-card:hover .reveal-content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, #08090D 0%, transparent 100%);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            z-index: 1;
+        }
+        .reveal-card:hover::before {
+            opacity: 0.9;
+        }
+
+        /* Grid Masonry */
+        .masonry {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+        @media (min-width: 640px) { .masonry { column-count: 2; } }
+        @media (min-width: 1024px) { .masonry { column-count: 3; } }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Acordeão */
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out, padding 0.4s ease;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 300px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Camada de Névoa */
+        .fog-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .fog-img {
+            position: absolute;
+            height: 100vh;
+            width: 300vw;
+            background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png') repeat-x;
+            background-size: contain;
+            opacity: 0.15;
+            animation: fogAnim 60s linear infinite;
+        }
+        .fog-img-2 {
+            position: absolute;
+            height: 100vh;
+            width: 300vw;
+            background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog2.png') repeat-x;
+            background-size: contain;
+            opacity: 0.1;
+            animation: fogAnim 40s linear infinite reverse;
+        }
+        @keyframes fogAnim {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-200vw, 0, 0); }
+        }
+        
+        .animated-scroll {
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body class="font-body antialiased relative">
+
+    <nav id="navbar" class="nav-transparent fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer">
+                    <a href="#" class="font-heading text-xl md:text-2xl font-bold tracking-widest text-hk-white hover:text-hk-gold transition-colors">
+                        SILKSONG <span class="text-hk-burgundy text-sm block -mt-1 font-body font-normal tracking-normal text-opacity-80">Site Não Oficial de Fã</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-5 lg:space-x-6 items-center">
+                    <a href="#about" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Jogo</a>
+                    <a href="#hornet" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Hornet</a>
+                    <a href="#world" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Mundo</a>
+                    <a href="#enemies" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Mini Bosses</a>
+                    <a href="#bosses" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Lace</a>
+                    <a href="#gameplay" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Jogabilidade</a>
+                    <a href="#news" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Notícias</a>
+                    <a href="#gallery" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">Galeria</a>
+                    <a href="#faq" class="text-sm uppercase tracking-wider text-hk-gray hover:text-hk-gold transition-colors">FAQ</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-hk-gray hover:text-hk-white focus:outline-none" aria-label="Abrir Menu">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Menu Mobile -->
+        <div id="mobile-menu" class="hidden md:hidden bg-hk-darkblue border-t border-hk-purple absolute w-full">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 text-center">
+                <a href="#about" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Jogo</a>
+                <a href="#hornet" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Hornet</a>
+                <a href="#world" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Mundo</a>
+                <a href="#enemies" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Mini Bosses</a>
+                <a href="#bosses" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Lace</a>
+                <a href="#gameplay" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Jogabilidade</a>
+                <a href="#news" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Notícias</a>
+                <a href="#gallery" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">Galeria</a>
+                <a href="#faq" class="block px-3 py-2 text-base font-medium text-hk-gray hover:text-hk-gold hover:bg-hk-purple transition-all">FAQ</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="relative h-screen flex items-center justify-center bg-hero-pattern bg-cover bg-center bg-no-repeat overflow-hidden">
+        <div class="fog-container">
+            <div class="fog-img"></div>
+            <div class="fog-img-2"></div>
+        </div>
+        
+        <!-- Tarja de Aviso de Site de Fã-->
+        <div class="absolute top-24 left-1/2 transform -translate-x-1/2 z-20 bg-hk-black/70 border border-hk-gold/30 px-4 py-1 rounded-full text-xs text-hk-gray tracking-wider uppercase backdrop-blur-sm">
+            <i class="fas fa-shield-alt text-hk-gold mr-1"></i> Site criado por Pedro Henrique Martinusso — Não oficial da Team Cherry
+        </div>
+
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto mt-12">
+            <h1 class="font-heading text-5xl md:text-7xl lg:text-8xl font-black tracking-widest text-hk-white mb-4 drop-shadow-2xl fade-in-up">
+                HOLLOW KNIGHT<br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-hk-gold via-hk-white to-hk-burgundy text-6xl md:text-8xl lg:text-9xl">SILKSONG</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-hk-gray italic mb-10 fade-in-up delay-100 font-light drop-shadow-lg">
+                "Uma nova jornada aguarda além do reino conhecido."
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-6 fade-in-up delay-200">
+                <a href="#about" class="px-8 py-3 bg-hk-burgundy hover:bg-red-900 text-hk-white font-semibold tracking-wider rounded-sm border border-hk-burgundy transition-all shadow-[0_0_15px_rgba(104,31,50,0.5)] hover:shadow-[0_0_25px_rgba(104,31,50,0.8)]">
+                    EXPLORAR O JOGO
+                </a>
+                <a href="#news" class="px-8 py-3 bg-transparent hover:bg-hk-darkblue text-hk-gold font-semibold tracking-wider rounded-sm border border-hk-gold transition-all gold-glow">
+                    ÚLTIMAS NOTÍCIAS
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 z-10 text-hk-gray animated-scroll cursor-pointer">
+            <a href="#about" aria-label="Rolar para baixo"><i class="fas fa-chevron-down text-2xl hover:text-hk-gold transition-colors"></i></a>
+        </div>
+        <div class="absolute bottom-0 w-full h-32 bg-gradient-to-t from-hk-black to-transparent z-0"></div>
+    </section>
+
+    <section id="about" class="py-24 bg-hk-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-12 items-center mb-16">
+                <div class="w-full lg:w-1/2 img-zoom rounded-md fade-in-up">
+                    <img src="siksong logo.png" alt="Floresta Misteriosa" class="w-full h-auto rounded-md shadow-2xl border border-hk-purple object-cover aspect-video">
+                </div>
+                <div class="w-full lg:w-1/2 fade-in-up delay-100">
+                    <h2 class="font-heading text-3xl md:text-5xl text-hk-white mb-6">Uma Nova Jornada <span class="text-hk-gold">Começa</span></h2>
+                    <p class="text-hk-gray mb-6 leading-relaxed">
+                        Jogue como Hornet,a princesa-protetora de Hallownest,e se aventure por um reino totalmente novo governado por seda e música! Capturada e levada a este mundo desconhecido,Hornet deve combater inimigos e resolver mistérios enquanto ascende em uma peregrinação mortal rumo ao topo do reino.
+                    </p>
+                    <p class="text-hk-gray leading-relaxed mb-8">
+                        Hollow Knight: Silksong é a sequência do aclamado jogo de ação e aventura.Viaje por terras inéditas,descubra novos poderes,enfrente hordas de insetos e feras,e desvende segredos antigos ligados ao seu passado e à sua verdadeira natureza.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 fade-in-up delay-200">
+                <div class="bg-hk-darkblue p-6 rounded-md border border-hk-purple card-hover flex flex-col items-center text-center">
+                    <i class="fas fa-compass text-3xl text-hk-gold mb-4"></i>
+                    <h3 class="font-heading text-xl text-hk-white mb-2">Exploração</h3>
+                    <p class="text-sm text-hk-gray">Descubra um vasto reino interconectado de florestas de coral,grutas musgosas e uma cidadela dourada.</p>
+                </div>
+                <div class="bg-hk-darkblue p-6 rounded-md border border-hk-purple card-hover flex flex-col items-center text-center">
+                    <i class="fas fa-khanda text-3xl text-hk-burgundy mb-4"></i>
+                    <h3 class="font-heading text-xl text-hk-white mb-2">Combate</h3>
+                    <p class="text-sm text-hk-gray">Participe de uma ação acrobática letal.Dance entre os inimigos com novos movimentos e ferramentas ágeis.</p>
+                </div>
+                <div class="bg-hk-darkblue p-6 rounded-md border border-hk-purple card-hover flex flex-col items-center text-center">
+                    <i class="fas fa-shoe-prints text-3xl text-hk-gold mb-4"></i>
+                    <h3 class="font-heading text-xl text-hk-white mb-2">Plataforma</h3>
+                    <p class="text-sm text-hk-gray">Navegue por ambientes traiçoeiros usando saltos graciosos,impulsos e habilidades de seda.</p>
+                </div>
+                <div class="bg-hk-darkblue p-6 rounded-md border border-hk-purple card-hover flex flex-col items-center text-center">
+                    <i class="fas fa-skull text-3xl text-hk-burgundy mb-4"></i>
+                    <h3 class="font-heading text-xl text-hk-white mb-2">Batalhas de Chefe</h3>
+                    <p class="text-sm text-hk-gray">Enfrente inimigos colossais e intimidantes que exigem observação,tempo e maestria.</p>
+                </div>
+                <div class="bg-hk-darkblue p-6 rounded-md border border-hk-purple card-hover flex flex-col items-center text-center">
+                    <i class="fas fa-key text-3xl text-hk-gold mb-4"></i>
+                    <h3 class="font-heading text-xl text-hk-white mb-2">Segredos</h3>
+                    <p class="text-sm text-hk-gray">Desenterre tesouros raros,sabedoria antiga e caminhos ocultos que recompensam os curiosos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="hornet" class="py-24 bg-hornet-bg relative border-y border-hk-burgundy border-opacity-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col-reverse lg:flex-row gap-12 items-center">
+                <div class="w-full lg:w-1/2 fade-in-up">
+                    <h2 class="font-heading text-4xl md:text-5xl text-hk-white mb-2">Conheça <span class="text-hk-burgundy drop-shadow-[0_0_10px_rgba(104,31,50,0.8)]">Hornet</span></h2>
+                    <h4 class="text-hk-gold uppercase tracking-widest text-sm mb-6">Princesa-Protetora de Hallownest</h4>
+                    <p class="text-hk-gray mb-6 leading-relaxed">
+                        Caçadora letal. Acrobata graciosa.Hornet empunha sua agulha e fio com precisão mortal.Ao contrário do Cavaleiro,seu estilo de combate é fluido,expansivo e ferozmente agressivo.Ela se apoia em agilidade,golpes rápidos e um vasto arsenal de ferramentas artesanais.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-wind text-2xl text-hk-burgundy mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Movimento Acrobático</h4>
+                                <p class="text-xs text-hk-gray">Corra,mergulhe e salte.A mobilidade de Hornet é extremamente rápida e responsiva.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-tools text-2xl text-hk-burgundy mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Ferramentas Tecidas</h4>
+                                <p class="text-xs text-hk-gray">Colete fragmentos para criar armadilhas,bombas e projéteis no combate usando seda.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-heart text-2xl text-hk-burgundy mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Cura por Vinculação</h4>
+                                <p class="text-xs text-hk-gray">Use a seda acumulada para curar ferimentos instantaneamente com tempo estratégico.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-comments text-2xl text-hk-burgundy mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Protagonista Vocalizada</h4>
+                                <p class="text-xs text-hk-gray">Interaja diretamente com os personagens,descobrindo segredos em conversas dinâmicas.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-[#B89A62] fa-bolt text-2xl text-hk-gold mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Ferrões Pálidos</h4>
+                                <p class="text-xs text-hk-gray">Gire criando garras letais a partir de fios que perseguem os inimigos..</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-4 bg-hk-black bg-opacity-50 rounded border border-hk-burgundy border-opacity-40">
+                            <i class="fas fa-circle-notch text-2xl text-hk-gold mt-1"></i>
+                            <div>
+                                <h4 class="text-hk-white font-semibold mb-1">Turbilhão de Fios</h4>
+                                <p class="text-xs text-hk-gray">Ataque criando uma tempestade de Seda ao seu redor.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full lg:w-1/2 fade-in-up delay-200 flex justify-center">
+                    <div class="relative w-full max-w-md aspect-[3/4] img-zoom rounded-lg overflow-hidden border-2 border-hk-burgundy shadow-[0_0_40px_rgba(104,31,50,0.3)]">
+                         <img src="hornet top.jpg" alt="Manto Vermelho em Atmosfera Sombria" class="w-full h-full object-cover">
+                         <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-transparent to-transparent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="world" class="py-24 bg-hk-darkblue relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl text-hk-white mb-4">Explore o Mundo de <span class="text-hk-gold">Pharloom</span></h2>
+                <p class="text-hk-gray max-w-2xl mx-auto">Suba até a cidadela brilhante no topo deste reino assombrado.Viaje por ambientes variados e feitos à mão com maestria.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Região 1 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up">
+                    <img src="Gruta Musgosa.png" alt="Gruta Musgosa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">Gruta Musgosa</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">Um sistema de cavernas ácidas e exuberantes,repleto de flora agressiva e precipícios traiçoeiros.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+                
+                <!-- Região 2 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up delay-100">
+                    <img src="docas Profundas.jpg" alt="Docas Profundas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">Docas Profundas</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">Um abismo industrial repleto de lava, maquinários complexos e perigosos inimigos mecânicos.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+
+                <!-- Região 3 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up delay-200">
+                    <img src="Cidadela.jpg" alt="A Cidadela" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">A Cidadela</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">O ápice reluzente do reino.Uma área fortificada que esconde as verdades supremas de Pharloom.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+
+                <!-- Região 4 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up">
+                    <img src="A Aldeia Sem Nome.png" alt="Assentamentos Esquecidos" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">A Aldeia Sem Nome</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">Povoados abandonados e ruínas silenciosas habitadas por peregrinos esquecidos pelo tempo.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+
+                <!-- Região 5 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up delay-100">
+                    <img src="Areias De Karak.jpg" alt="Florestas Vivas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">Areias De Karak</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">Região desértica de corais e tempestades de areia constantes.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+
+                <!-- Região 6 -->
+                <div class="relative group aspect-video md:aspect-[4/5] rounded-md overflow-hidden bg-hk-black fade-in-up delay-200">
+                    <img src="Monte Plumídio.jpg" alt="Territórios Perigosos" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-gradient-to-t from-hk-black via-hk-black/50 to-transparent"></div>
+                    <div class="absolute inset-0 p-6 flex flex-col justify-end transform transition-transform duration-500 translate-y-4 group-hover:translate-y-0">
+                        <h3 class="font-heading text-2xl text-hk-gold mb-2 drop-shadow-md">Monte Plumídio</h3>
+                        <p class="text-sm text-hk-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 mb-4">Zonas hostis de grande altitude guardadas por sentinelas armados e tempestades congelantes.</p>
+                        <button class="self-start text-xs uppercase tracking-widest text-hk-burgundy font-bold hover:text-hk-white transition-colors opacity-0 group-hover:opacity-100 delay-200">Explorar <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="enemies" class="py-24 bg-hk-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl text-hk-white mb-4">Mini Bosses & <span class="text-hk-burgundy">Ataques</span></h2>
+                <p class="text-hk-gray max-w-2xl mx-auto">Encontre novos 234 inimigos! Feras e Caçadores,Assassinos e Guardas da Realeza.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-20 fade-in-up delay-100">
+                <div class="reveal-card relative aspect-square rounded-md overflow-hidden bg-hk-darkblue border border-hk-purple cursor-pointer">
+                    <img src="Badalo-Corista.jpg" alt="Assassino de Aço" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 p-4 flex flex-col justify-end z-10 text-center reveal-content">
+                        <h4 class="font-heading text-lg text-hk-white">Badalo-Corista</h4>
+                        <p class="text-xs text-hk-gold mb-2">Mini Boss</p>
+                        <p class="text-xs text-hk-gray">Ele atua como um discípulo percussivo do Coro,empunhando uma marreta e um carretel de Seda.</p>
+                    </div>
+                </div>
+                <div class="reveal-card relative aspect-square rounded-md overflow-hidden bg-hk-darkblue border border-hk-purple cursor-pointer">
+                    <img src="Peregrino Cobiçoso.png" alt="Fera do Sino" class="w-full h-full object-cover grayscale">
+                    <div class="absolute inset-0 p-4 flex flex-col justify-end z-10 text-center reveal-content">
+                        <h4 class="font-heading text-lg text-hk-white">Peregrino Cobiçoso</h4>
+                        <p class="text-xs text-hk-gold mb-2">Mini Boss</p>
+                        <p class="text-xs text-hk-gray">Inseto robusto, coberto de rosários.Se enfurecido,chicoteia seus cordões em um ataque incessante.</p>
+                    </div>
+                </div>
+                <div class="reveal-card relative aspect-square rounded-md overflow-hidden bg-hk-darkblue border border-hk-purple cursor-pointer">
+                    <img src="Grande Palheta.jpg" alt="Tecelão de Seda" class="w-full h-full object-cover hue-rotate-[200deg]">
+                    <div class="absolute inset-0 p-4 flex flex-col justify-end z-10 text-center reveal-content">
+                        <h4 class="font-heading text-lg text-hk-white">Grande Palheta</h4>
+                        <p class="text-xs text-hk-gold mb-2">Mini Boss</p>
+                        <p class="text-xs text-hk-gray">Inseto de alta posição no Coro, portando um arco. Palheta de elite treinado e alimentado muito mais do que seus semelhantes menores.</p>
+                    </div>
+                </div>
+                <div class="reveal-card relative aspect-square rounded-md overflow-hidden bg-hk-darkblue border border-hk-purple cursor-pointer">
+                    <img src="Gárgolo.jpg" alt="Investidor Musgoso" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 p-4 flex flex-col justify-end z-10 text-center reveal-content">
+                        <h4 class="font-heading text-lg text-hk-white">Gárgolo</h4>
+                        <p class="text-xs text-hk-gold mb-2">Mini Boss</p>
+                        <p class="text-xs text-hk-gray">Ele é um Trepanguejo adulto que armazena ácido corrosivo em sua carapaça e o despeja de sua boca em alvos próximos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="bosses" class="py-24 bg-hk-darkblue relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl text-hk-white mb-4">Encontros Lendários com <span class="text-hk-gold">Lace</span></h2>
+                <p class="text-hk-gray max-w-2xl mx-auto">Duelos dramático com a vilã,rainha e rival principal que testará todos os seus reflexos.</p>
+            </div>
+
+            <div class="fade-in-up delay-100">
+                <div class="bg-hk-black rounded-lg border border-hk-purple overflow-hidden flex flex-col md:flex-row mb-8 card-hover">
+                    <div class="w-full md:w-2/5 relative h-64 md:h-auto">
+                        <img src="lace.jpg" alt="Confronto com Lace" class="absolute inset-0 w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-r from-transparent to-hk-black hidden md:block"></div>
+                        <div class="absolute inset-0 bg-gradient-to-t from-hk-black to-transparent block md:hidden"></div>
+                    </div>
+                    <div class="w-full md:w-3/5 p-8 flex flex-col justify-center">
+                        <h3 class="font-heading text-3xl text-hk-burgundy mb-2 drop-shadow-md">Lace</h3>
+                        <p class="text-hk-gold text-sm tracking-widest uppercase mb-4">Rival de Agulha</p>
+                        <p class="text-hk-gray mb-6 text-sm md:text-base">Uma guerreira estilosa e altamente ágil,cuja arma lembra a própria agulha de Hornet.As batalhas contra Lace são danças intensas de aparos,contra-ataques e duelos aéreos em alta velocidade.</p>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs border-t border-hk-purple/40 pt-4">
+                            <div>
+                                <span class="text-hk-white font-bold block mb-1">Estilo de Combate</span>
+                                <span class="text-hk-gray">Estocadas rápidas e esquivas aéreas</span>
+                            </div>
+                            <div>
+                                <span class="text-hk-white font-bold block mb-1">Ambiente</span>
+                                <span class="text-hk-gray">Campos de flores brancas</span>
+                            </div>
+                            <div>
+                                <span class="text-hk-white font-bold block mb-1">Habilidades</span>
+                                <span class="text-hk-gray">Parry Gracioso & Investida</span>
+                            </div>
+                            <div>
+                                <span class="text-hk-white font-bold block mb-1">Estratégia</span>
+                                <span class="text-hk-gray">Aguarde o momento exato do contra-ataque</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="gameplay" class="py-24 bg-hk-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl md:text-5xl text-hk-white mb-4">Mecânicas da <span class="text-hk-gold">Jornada</span></h2>
+                <p class="text-hk-gray max-w-2xl mx-auto">Uma jogabilidade refinada focada na agilidade,criação de ferramentas e exploração orgânica.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-up delay-100">
+                <div class="bg-hk-darkblue p-8 rounded-lg border border-hk-purple card-hover">
+                    <div class="w-12 h-12 rounded-full bg-hk-purple/30 flex items-center justify-center text-hk-gold text-xl mb-6">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3 class="font-heading text-xl text-hk-white mb-3">Exploração Dinâmica</h3>
+                    <p class="text-sm text-hk-gray leading-relaxed">Descubra caminhos ocultos,passagens secretas e regiões totalmente interconectadas em uma estrutura vasta de Metroidvania.</p>
+                </div>
+
+                <div class="bg-hk-darkblue p-8 rounded-lg border border-hk-purple card-hover">
+                    <div class="w-12 h-12 rounded-full bg-hk-burgundy/30 flex items-center justify-center text-hk-burgundy text-xl mb-6">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="font-heading text-xl text-hk-white mb-3">Combate Veloz</h3>
+                    <p class="text-sm text-hk-gray leading-relaxed">Ataques acrobáticos,combates aéreos dinâmicos e esquivas no tempo certo tornam cada confronto eletrizante e preciso.</p>
+                </div>
+
+                <div class="bg-hk-darkblue p-8 rounded-lg border border-hk-purple card-hover">
+                    <div class="w-12 h-12 rounded-full bg-hk-purple/30 flex items-center justify-center text-hk-gold text-xl mb-6">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h3 class="font-heading text-xl text-hk-white mb-3">Sistema de Ferramentas</h3>
+                    <p class="text-sm text-hk-gray leading-relaxed">Forje e aprimore um arsenal versátil de armadilhas,projéteis e artefatos de assistência usando fios e rolos de seda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="news" class="py-24 bg-hk-darkblue relative border-y border-hk-purple">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-end mb-12 fade-in-up">
+                <div>
+                    <h2 class="font-heading text-4xl text-hk-white">Últimas <span class="text-hk-gold">Notícias</span></h2>
+                </div>
+                <a href="#" class="hidden sm:block text-sm text-hk-gray hover:text-hk-white transition-colors">Ver Arquivo Completo <i class="fas fa-arrow-right ml-1"></i></a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Notícia 1 -->
+                <article class="bg-hk-black rounded border border-hk-purple overflow-hidden card-hover fade-in-up flex flex-col">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1542459428-1122557e4e89?auto=format&fit=crop&w=600&q=80" alt="Imagem de Notícia" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-center text-xs text-hk-gray mb-3">
+                            <span class="text-hk-burgundy font-semibold tracking-wider">DESENVOLVIMENTO</span>
+                            <span>14 de Fev de 2024</span>
+                        </div>
+                        <h3 class="font-heading text-xl text-hk-white mb-3 hover:text-hk-gold transition-colors"><a href="#">Atualização de Desenvolvimento: A Arte de Pharloom</a></h3>
+                        <p class="text-sm text-hk-gray mb-4 flex-grow">Uma olhada nos bastidores sobre como a equipe de arte cria os fundos paralaxe detalhados do novo reino...</p>
+                        <a href="#" class="text-sm text-hk-gold hover:text-hk-white font-semibold self-start transition-colors">Ler Mais</a>
+                    </div>
+                </article>
+
+                <!-- Notícia 2 -->
+                <article class="bg-hk-black rounded border border-hk-purple overflow-hidden card-hover fade-in-up delay-100 flex flex-col">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1518928876116-566b6cda8470?auto=format&fit=crop&w=600&q=80" alt="Imagem de Notícia" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105 grayscale">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-center text-xs text-hk-gray mb-3">
+                            <span class="text-hk-burgundy font-semibold tracking-wider">MÚSICA</span>
+                            <span>05 de Nov de 2023</span>
+                        </div>
+                        <h3 class="font-heading text-xl text-hk-white mb-3 hover:text-hk-gold transition-colors"><a href="#">Christopher Larkin Retorna para a Trilha Sonora</a></h3>
+                        <p class="text-sm text-hk-gray mb-4 flex-grow">O maestro por trás da icônica trilha sonora do Hollow Knight original de volta com novas orquestrações...</p>
+                        <a href="#" class="text-sm text-hk-gold hover:text-hk-white font-semibold self-start transition-colors">Ler Mais</a>
+                    </div>
+                </article>
+
+                <!-- Notícia 3 -->
+                <article class="bg-hk-black rounded border border-hk-purple overflow-hidden card-hover fade-in-up delay-200 flex flex-col">
+                    <div class="h-48 overflow-hidden relative">
+                        <div class="absolute inset-0 bg-black/40 flex items-center justify-center z-10 pointer-events-none">
+                            <i class="fas fa-play-circle text-4xl text-white/80"></i>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80" alt="Imagem de Notícia" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </div>
+                    <div class="p-6 flex flex-col flex-grow">
+                        <div class="flex justify-between items-center text-xs text-hk-gray mb-3">
+                            <span class="text-hk-burgundy font-semibold tracking-wider">TRAILER</span>
+                            <span>12 de Jun de 2022</span>
+                        </div>
+                        <h3 class="font-heading text-xl text-hk-white mb-3 hover:text-hk-gold transition-colors"><a href="#">Revelação do Trailer na Xbox Showcase</a></h3>
+                        <p class="text-sm text-hk-gray mb-4 flex-grow">Assista às mais recentes cenas de gameplay demonstrando novas ferramentas, inimigos e áreas em ação...</p>
+                        <a href="#" class="text-sm text-hk-gold hover:text-hk-white font-semibold self-start transition-colors">Assista Agora</a>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="gallery" class="py-24 bg-hk-black relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 fade-in-up">
+                <h2 class="font-heading text-4xl text-hk-white mb-2">Galeria de Arte & <span class="text-hk-gold">Capturas</span></h2>
+                <p class="text-hk-gray">Vislumbres Impressionantes do Reino Assombrado de Pharloom.</p>
+            </div>
+
+            <div class="masonry fade-in-up delay-100">
+                <div class="masonry-item relative group cursor-pointer rounded overflow-hidden" onclick="openModal('https://images.unsplash.com/photo-1599839619722-39751411ea63?auto=format&fit=crop&w=1200&q=100')">
+                    <img src="https://images.unsplash.com/photo-1599839619722-39751411ea63?auto=format&fit=crop&w=600&q=80" alt="Galeria 1" class="w-full h-auto transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-hk-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-search-plus text-3xl text-hk-white"></i>
+                    </div>
+                </div>
+                
+                <div class="masonry-item relative group cursor-pointer rounded overflow-hidden" onclick="openModal('https://images.unsplash.com/photo-1518928876116-566b6cda8470?auto=format&fit=crop&w=1200&q=100')">
+                    <img src="https://images.unsplash.com/photo-1518928876116-566b6cda8470?auto=format&fit=crop&w=600&q=80" alt="Galeria 2" class="w-full h-auto transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-hk-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-search-plus text-3xl text-hk-white"></i>
+                    </div>
+                </div>
+
+                <div class="masonry-item relative group cursor-pointer rounded overflow-hidden" onclick="openModal('https://images.unsplash.com/photo-1525997233633-899120eb0700?auto=format&fit=crop&w=1200&q=100')">
+                    <img src="https://images.unsplash.com/photo-1525997233633-899120eb0700?auto=format&fit=crop&w=600&q=80" alt="Galeria 3" class="w-full h-auto transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-hk-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-search-plus text-3xl text-hk-white"></i>
+                    </div>
+                </div>
+
+                <div class="masonry-item relative group cursor-pointer rounded overflow-hidden" onclick="openModal('https://images.unsplash.com/photo-1542459428-1122557e4e89?auto=format&fit=crop&w=1200&q=100')">
+                    <img src="https://images.unsplash.com/photo-1542459428-1122557e4e89?auto=format&fit=crop&w=600&q=80" alt="Galeria 4" class="w-full h-auto transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-hk-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-search-plus text-3xl text-hk-white"></i>
+                    </div>
+                </div>
+                
+                <div class="masonry-item relative group cursor-pointer rounded overflow-hidden" onclick="openModal('https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=1200&q=100')">
+                    <img src="https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?auto=format&fit=crop&w=600&q=80" alt="Galeria 5" class="w-full h-auto transition-transform duration-500 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-hk-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <i class="fas fa-search-plus text-3xl text-hk-white"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-24 bg-hk-darkblue relative">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="font-heading text-3xl md:text-4xl text-hk-white mb-10 text-center fade-in-up">Perguntas <span class="text-hk-gold">Frequentes</span></h2>
+            
+            <div class="space-y-4 fade-in-up delay-100">
+                <div class="accordion-item bg-hk-black border border-hk-purple rounded overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none hover:bg-hk-purple hover:bg-opacity-20 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-heading text-lg text-hk-white">O que é Hollow Knight: Silksong ?</span>
+                        <i class="fas fa-chevron-down text-hk-gold accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-hk-black px-6">
+                        <p class="text-sm text-hk-gray pb-4">Hollow Knight:Silksong é a sequência épica de Hollow Knight,o aclamado jogo de ação e aventura Metroidvania.Você joga como Hornet,princesa-protetora de Hallownest,explorando um reino inteiramente novo governado por seda e música.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-hk-black border border-hk-purple rounded overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none hover:bg-hk-purple hover:bg-opacity-20 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-heading text-lg text-hk-white">Este site é Oficialmente Afiliado à Team Cherry ?</span>
+                        <i class="fas fa-chevron-down text-hk-gold accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-hk-black px-6">
+                        <p class="text-sm text-hk-burgundy font-semibold pb-4">Não.Este é estritamente um site não oficial criado pelo fã Pedro Henrique apaixonado pelo jogo.Não tenho vínculo,autorização,endosso ou conexão oficial com a Team Cherry.Todos os direitos e marcas pertencem à Team Cherry.</p>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-hk-black border border-hk-purple rounded overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none hover:bg-hk-purple hover:bg-opacity-20 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-heading text-lg text-hk-white">Quando Lançou Hollow Knight:Silksong ?</span>
+                        <i class="fas fa-chevron-down text-hk-gold accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-hk-black px-6">
+                        <p class="text-sm text-hk-gray pb-4">foi lançado em 4 de setembro de 2025.</p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item bg-hk-black border border-hk-purple rounded overflow-hidden">
+                    <button class="w-full px-6 py-4 text-left flex justify-between items-center focus:outline-none hover:bg-hk-purple hover:bg-opacity-20 transition-colors" onclick="toggleAccordion(this)">
+                        <span class="font-heading text-lg text-hk-white">Em Quais Plataformas o Jogo está Disponível ?</span>
+                        <i class="fas fa-chevron-down text-hk-gold accordion-icon transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content bg-hk-black px-6">
+                        <p class="text-sm text-hk-gray pb-4">Hollow Knight: Silksong está lançado para PC(Windows(Steam),Linux e MacOS),Nintendo Switch,Xbox Series X|S,Xbox(One incluindo Game Pass) e PlayStation 4/5.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black pt-16 pb-8 border-t border-hk-purple border-opacity-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="font-heading text-2xl font-bold tracking-widest text-hk-white mb-4">
+                        SILKSONG <span class="text-hk-burgundy text-sm block font-body font-normal tracking-normal">Comunidade de Fãs</span>
+                    </h3>
+                    <p class="text-sm text-hk-gray max-w-sm mb-6">Dedicado a fornecer as últimas notícias,segredos e guias da obra-prima da Team Cherry.Entre no reino de Pharloom.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-hk-gray hover:text-hk-white transition-colors text-xl" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-hk-gray hover:text-hk-white transition-colors text-xl" aria-label="Discord"><i class="fab fa-discord"></i></a>
+                        <a href="#" class="text-hk-gray hover:text-hk-white transition-colors text-xl" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-hk-gray hover:text-hk-white transition-colors text-xl" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-heading text-hk-gold mb-4 uppercase tracking-wider text-sm">Navegação</h4>
+                    <ul class="space-y-2 text-sm text-hk-gray">
+                        <li><a href="#home" class="hover:text-hk-white transition-colors">Início</a></li>
+                        <li><a href="#about" class="hover:text-hk-white transition-colors">Jogo</a></li>
+                        <li><a href="#hornet" class="hover:text-hk-white transition-colors">Hornet</a></li>
+                        <li><a href="#world" class="hover:text-hk-white transition-colors">Mundo</a></li>
+                        <li><a href="#news" class="hover:text-hk-white transition-colors">Notícias</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-heading text-hk-gold mb-4 uppercase tracking-wider text-sm">Recursos</h4>
+                    <ul class="space-y-2 text-sm text-hk-gray">
+                        <li><a href="#gallery" class="hover:text-hk-white transition-colors">Galeria</a></li>
+                        <li><a href="#faq" class="hover:text-hk-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-hk-white transition-colors">Política de Privacidade</a></li>
+                        <li><a href="#" class="hover:text-hk-white transition-colors">Termos de Uso</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-hk-purple border-opacity-30 pt-8 text-center md:text-left flex flex-col md:flex-row justify-between items-center text-xs text-hk-gray">
+                <p class="mb-4 md:mb-0">&copy; 2026 Pedro Henrique Martinusso.Feito de fã para fã.</p>
+                <div class="bg-hk-darkblue p-3 rounded border border-hk-burgundy border-opacity-30 text-center max-w-md">
+                    <span class="text-hk-burgundy font-bold block mb-1">AVISO LEGAL</span>
+                    Este é um site não oficial criado por fã e não possui vínculo,autorização ou endosso da Team Cherry."Hollow Knight" e "Silksong" são marcas registradas da Team Cherry.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div id="imageModal" class="fixed inset-0 z-[100] bg-black/95 hidden flex justify-center items-center opacity-0 transition-opacity duration-300">
+        <button onclick="closeModal()" class="absolute top-6 right-6 text-hk-gray hover:text-hk-white focus:outline-none text-4xl" aria-label="Fechar Modal">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="max-w-5xl w-full p-4">
+            <img id="modalImage" src="" alt="Visualização Ampliada" class="w-full h-auto max-h-[85vh] object-contain mx-auto shadow-[0_0_50px_rgba(0,0,0,0.8)] border border-hk-purple border-opacity-50 rounded">
+        </div>
+    </div>
+
+    <script>
+        // Lógica de Navbar Fixa
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.remove('nav-transparent');
+                navbar.classList.add('nav-glass');
+                navbar.classList.add('py-0');
+            } else {
+                navbar.classList.add('nav-transparent');
+                navbar.classList.remove('nav-glass');
+                navbar.classList.remove('py-0');
+            }
+        });
+
+        // Alternar Menu Mobile
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Observer de Interseção para Animações
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Lógica de Acordeão no FAQ
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            
+            document.querySelectorAll('.accordion-item').forEach(otherItem => {
+                if(otherItem !== item) {
+                    otherItem.classList.remove('active');
+                }
+            });
+
+            item.classList.toggle('active');
+        }
+
+        // Lógica de Modal para Galeria
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        
+        function openModal(imageSrc) {
+            modalImg.src = imageSrc;
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modalImg.src = '';
+                document.body.style.overflow = 'auto';
+            }, 300);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
